@@ -2,10 +2,9 @@ const Discord = require("discord.js");
 
 module.exports.run = async (bot, message, args) => {
 
-  //!addrole @andrew Dog Person
   if(!message.member.hasPermission("MANAGE_MEMBERS")) return message.reply("Sorry pal, you can't do that.");
   if(args[0] == "help"){
-    message.reply("Usage: !addrole <user> <role>");
+    message.reply("Usage: !removerole <user> <role>");
     return;
   }
   let rMember = message.guild.member(message.mentions.users.first()) || message.guild.members.get(args[0]);
@@ -15,17 +14,16 @@ module.exports.run = async (bot, message, args) => {
   let gRole = message.guild.roles.find(`name`, role);
   if(!gRole) return message.reply("Couldn't find that role.");
 
-  if(rMember.roles.has(gRole.id)) return message.reply("They already have that role.");
-  await(rMember.addRole(gRole.id));
+  if(!rMember.roles.has(gRole.id)) return message.reply("They don't have that role.");
+  await(rMember.removeRole(gRole.id));
 
   try{
-    await rMember.send(`Congrats, you have been given the role ${gRole.name}`)
+    await rMember.send(`RIP, you lost the ${gRole.name} role.`)
   }catch(e){
-    console.log(e.stack);
-    message.channel.send(`Congrats to <@${rMember.id}>, they have been given the role ${gRole.name}. We tried to DM them, but their DMs are locked.`)
+    message.channel.send(`RIP to <@${rMember.id}>, We removed ${gRole.name} from them. We tried to DM them, but their DMs are locked.`)
   }
 }
 
 module.exports.help = {
-  name: "addrole"
+  name: "removerole"
 }
